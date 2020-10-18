@@ -1,0 +1,66 @@
+# Regressions Models Course Project
+In this analysis we are attempting to find out whether a manual or automatic transmission is better for miles per gallon (mpg). 
+
+## Exploring the dataset
+```{r}
+library (datasets)
+data(mtcars)
+head(mtcars)
+```
+
+## Categorical Variables
+```{r}
+#Firstly vs and am should be modeled as categorical variables
+mtcars$vs <- as.factor(mtcars$vs)
+mtcars$am <- as.factor(mtcars$am)
+```
+
+## Summary of mpg column
+```{r}
+summary(mtcars$mpg)
+```
+## Plotting mpg for Transmission type
+```{r}
+boxplot(mpg ~ am, data = mtcars, xlab = "Transmission type")
+```
+We can see there is a significant difference between the gas mileage for each type of transmission. We will now try to fit a linear regression model.
+
+## Simple linear regression model
+```{r}
+S_fit <- lm(mpg ~ factor(am), data=mtcars)
+summary(S_fit)
+```
+We can see that the adjusted R squared value is only 0.3598 which means that only 35.98% of the regression variance can be explained by our model. Let's see how it behaves with the multivariate regression model
+
+## Multivariable Regression Model
+```{r}
+data(mtcars)
+M_fit <- lm(mpg ~ . ,data=mtcars)
+summary(M_fit)
+```
+We can see that the adjusted R squared value is only 0.869 which means that 86.9% of the regression variance can be explained by our model. Now we will calculate the correlation to find which variables that along with the Transmission Type affect the outcome.
+
+## Correlation Analysis
+```{r}
+cor(mtcars)[1,]
+```
+In addition to am, we have other variables that show high correlations. There we run the multivariate analysis with those variables as shown below.
+```{r}
+final_fit <- lm(mpg ~ wt+hp+disp+cyl+am, data = mtcars)
+summary(final_fit)
+```
+We plot the residuals to check for any non-normality. 
+```{r}
+par(mfrow = c(2, 2))
+plot(final_fit)
+```
+
+
+## CONCLUSION
+Using the final multivariate regression model we can see the multiple R squared value is much higher at 0.8551, where 85.51% of the regression variance can be explained by the chosen variables. We can thus conclude that ‘wt’, ‘cyl’, 'disp' and 'hp' affect the outcomes of the relationship between ’am and ’mpg’.
+
+
+
+
+
+
